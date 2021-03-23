@@ -26,14 +26,14 @@ include_once SSW_WP_EI_PATH.'/class/index.php';
 include_once SSW_WP_EI_PATH.'/api/index.php';
 include_once SSW_WP_EI_PATH.'/functions/index.php';
 
-register_activation_hook(__FILE__, 'install');
-register_uninstall_hook(__FILE__, 'uninstall');
+register_activation_hook(__FILE__, 'sswEIinstall');
+register_uninstall_hook(__FILE__, 'sswEIuninstall');
 //==================================================================
 //funções
 /**
  * função de instalação do plugin
  */
-function install(){
+function sswEIinstall(){
 	add_option(SSW_WP_EI_CLIENT_ID, '');
 	add_option(SSW_WP_EI_CLIENTE_SECRET, '');
 	add_option(SSW_WP_EI_CODE, '');
@@ -44,7 +44,7 @@ function install(){
 /**
  * função de desinstalação do plugin
  */
-function uninstall(){
+function sswEIuninstall(){
 	delete_option(SSW_WP_EI_CLIENT_ID);
 	delete_option(SSW_WP_EI_CLIENTE_SECRET);
 	delete_option(SSW_WP_EI_CODE);

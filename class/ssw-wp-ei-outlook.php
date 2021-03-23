@@ -128,14 +128,84 @@ if( !class_exists('EI_ssw_wp_outlook') ){
             }
             return false;
         }
-
+        
         /**
-         * Recupera emails
+         * Recupera emails na caixa de entrada
          */
         public function getEmails($select = ['subject', 'from', 'receivedDateTime']){
             $url = 'https://graph.microsoft.com/v1.0/me/mailfolders/inbox/messages?$select=';
             $url .= join(",",$select);
             $url .= '&$top=25&$orderby=receivedDateTime%20DESC';
+            //headers
+            $headers = array(
+                'Authorization' => 'Bearer '. $this->access_token
+            );
+            $resp = $this->get($url, $headers);
+            if(isset($resp->value)){ return $resp; }
+            else{ 
+                // se não retornar resposta atualizo o token no servidor
+                // atualizo o header e tento novamente
+                if($this->refreshToken()){
+                    //headers
+                    $headers = array(
+                        'Authorization' => 'Bearer '. $this->access_token
+                    );
+                    //envia
+                    $resp = $this->get($url, $headers);
+                    if(isset($resp->value)){ return $resp; }
+                }
+            }
+            return false;
+        }
+
+        /**
+         * Recupera emails usando filtros
+         * @param select
+         * @param filter
+         * @param search
+         * @param top
+         * @param top
+         */
+        public function getMessages(
+        $select = null,
+        $filter = null,
+        $search = null,
+        $top = null,
+        $orderby = null){
+            $hasParam = false;
+            $url = 'https://graph.microsoft.com/v1.0/me/messages?';
+            if($select){
+                $url .= '$select='.join(",",$select);
+                $hasParam = true;
+            }
+            if($filter){
+                if($hasParam){
+                    $url .= "&";
+                }
+                $url .= '$filter='.$filter;
+                $hasParam = true;
+            }
+            if($search){
+                if($hasParam){
+                    $url .= "&";
+                }
+                $url .= '$search="'.$search.'"';
+                $hasParam = true;
+            }
+            if($top){
+                if($hasParam){
+                    $url .= "&";
+                }
+                $url .= '$top="'.$top.'"';
+                $hasParam = true;
+            }
+            if($orderby){
+                if($hasParam){
+                    $url .= "&";
+                }
+                $url .= '$orderby="'.$orderby.'"';
+                $hasParam = true;
+            }
             //headers
             $headers = array(
                 'Authorization' => 'Bearer '. $this->access_token

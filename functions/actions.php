@@ -1,16 +1,16 @@
 <?php
 //adiocionar admin menu
-add_action ('admin_menu', 'mainAdminPage');
+add_action ('admin_menu', 'sswEImainAdminPage');
 // para pegar a url de uma página
 /* menu_page_url( string $menu_slug, bool $echo = true ) */
-function mainAdminPage()
+function sswEImainAdminPage()
 {
 	add_menu_page(
 		SSW_WP_EI_PLUGIN_NAME,
 		SSW_WP_EI_PLUGIN_NAME,
 		'manage_options',
 		SSW_WP_EI_PLUGIN_SLUG,
-		'returnMainPage',
+		'sswEIreturnMainPage',
 		'dashicons-admin-settings',
 		150
 	);
@@ -29,13 +29,13 @@ function mainAdminPage()
 		'Configuração', 
 		'manage_options',
 		SSW_WP_EI_PLUGIN_SLUG.'-config', 
-		'returnEditPage', 
+		'sswEIreturnEditPage', 
 		1
 	);
 }
-function returnMainPage(){
+function sswEIreturnMainPage(){
 	include SSW_WP_EI_PATH."/views/template/index.php";
 }
-function returnEditPage(){
+function sswEIreturnEditPage(){
 	include SSW_WP_EI_PATH."/views/template/edit.php";
 }
