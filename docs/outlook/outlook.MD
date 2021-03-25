@@ -17,3 +17,6 @@
 ![Tela integração ok outlook](../assets/integracao-ok.jpg)
 
 - A partir daí podemos fazer as requisições pelos métodos enquanto fazemos as requisições de token de acesso automaticamente e estamos prontos para usar a classe <code>EI_ssw_wp_outlook</code>
+
+## Métodos
+[Documentação dos médotos](outlook-methods.md)

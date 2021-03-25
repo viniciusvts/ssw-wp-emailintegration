@@ -131,6 +131,7 @@ if( !class_exists('EI_ssw_wp_outlook') ){
         
         /**
          * Recupera emails na caixa de entrada
+         * @param array $select - argumentos que vão ser passados pela url
          */
         public function getEmails($select = ['subject', 'from', 'receivedDateTime']){
             $url = 'https://graph.microsoft.com/v1.0/me/mailfolders/inbox/messages?$select=';
@@ -152,58 +153,26 @@ if( !class_exists('EI_ssw_wp_outlook') ){
                     );
                     //envia
                     $resp = $this->get($url, $headers);
-                    if(isset($resp->value)){ return $resp; }
+                    if(isset($resp->value) || isset($resp->error)){ return $resp; }
                 }
             }
             return false;
         }
 
         /**
-         * Recupera emails usando filtros
-         * @param select
-         * @param filter
-         * @param search
-         * @param top
-         * @param top
+         * Recupera emails usando filtros.
+         * exemplo de uso:
+         * https://github.com/microsoftgraph/microsoft-graph-docs/commit/07c13bb609110410de4969cc44fd4fab00b1eede
+         * @param array $args - argumentos que vão ser passados pela url
          */
-        public function getMessages(
-        $select = null,
-        $filter = null,
-        $search = null,
-        $top = null,
-        $orderby = null){
+        public function getMessages($args = []){
             $hasParam = false;
             $url = 'https://graph.microsoft.com/v1.0/me/messages?';
-            if($select){
-                $url .= '$select='.join(",",$select);
-                $hasParam = true;
-            }
-            if($filter){
+            foreach ($args as $key => $value) {
                 if($hasParam){
                     $url .= "&";
                 }
-                $url .= '$filter='.$filter;
-                $hasParam = true;
-            }
-            if($search){
-                if($hasParam){
-                    $url .= "&";
-                }
-                $url .= '$search="'.$search.'"';
-                $hasParam = true;
-            }
-            if($top){
-                if($hasParam){
-                    $url .= "&";
-                }
-                $url .= '$top="'.$top.'"';
-                $hasParam = true;
-            }
-            if($orderby){
-                if($hasParam){
-                    $url .= "&";
-                }
-                $url .= '$orderby="'.$orderby.'"';
+                $url .= $key.'='.$value;
                 $hasParam = true;
             }
             //headers
@@ -222,7 +191,7 @@ if( !class_exists('EI_ssw_wp_outlook') ){
                     );
                     //envia
                     $resp = $this->get($url, $headers);
-                    if(isset($resp->value)){ return $resp; }
+                    if(isset($resp->value) || isset($resp->error)){ return $resp; }
                 }
             }
             return false;
